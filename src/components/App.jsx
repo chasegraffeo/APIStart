@@ -1,12 +1,8 @@
 import React, { Component } from "react";
-/* import logo from './logo.svg';
-import './App.css';
- */
+import Films from'./films';
+import Actor from'./people';
 import Button from "react-bootstrap/Button";
-//import ProgressBar from "react-bootstrap/ProgressBar";
-// import Button from "react-bootstrap/Button";
-// import Button from "react-bootstrap/Button";
-// import Button from "react-bootstrap/Button";
+ 
 
 class App extends Component {
   constructor(props) {
@@ -15,57 +11,89 @@ class App extends Component {
       text: "Studio Ghiblis",
       movies: [],
       people: [],
+      movieShown: false,
+      pplShown: false
     };
   }
-  componentDidMount() {
+   
+ movWatch = () => {
     fetch("https://ghibliapi.herokuapp.com/films")
       .then(response => response.json())
-      .then(data => this.setState({ movies: data }))
-      .then(console.log(this.state.movies))
+      .then(obj => this.setState({ movies: obj, movieShown: true, pplShown:false }))
+      //.then(data => console.log(data))
+  }
+  
+  pplActing = () => {
+    fetch("https://ghibliapi.herokuapp.com/people")
+      .then(response => response.json())
+      .then(obj => this.setState({ people: obj, pplShown: true, movieShown:false }))
+      //.then(ppl => console.log(ppl))
   }
   
 
-
-
+ 
   render() {
+    if (this.state.movieShown){
+      return ( <React.Fragment>
+        <h1>{this.state.text}</h1> 
+        <br/>
+        <br/>
+        <span>
+          <Button variant="dark" onClick={this.movWatch}>
+            Link
+          </Button>            
+          <Button variant="dark" onClick={this.pplActing}>
+            Link
+          </Button>
+        </span>
+        <br/>
+      <Films movies={this.state.movies} />
+      
+       
+    </React.Fragment>)
+    }else if(this.state.pplShown){
     return (
       <React.Fragment>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "gray"
-          }}
-        >
           <h1>{this.state.text}</h1> 
           <br/>
           <br/>
           <span>
-            <Button variant="dark" href="#">
+            <Button variant="dark" onClick={this.movWatch}>
               Link
             </Button>            
-            <Button variant="dark" href="https://ghibliapi.herokuapp.com/#">
-              Link
-            </Button> 
-            <Button variant="dark" href="#">
+            <Button variant="dark" onClick={this.pplActing}>
               Link
             </Button>
           </span>
           <br/>
-          {/* <ProgressBar animated now={45} /> */}
-        </div>
+        
+        <Actor people={this.state.people} />
+         
       </React.Fragment>
-    );
+    );}else{
+      return(
+      <React.Fragment>
+          <h1>{this.state.text}</h1> 
+          <br/>
+          <br/>
+          <span>
+            <Button variant="dark" onClick={this.movWatch}>
+              Link
+            </Button>            
+            <Button variant="dark" onClick={this.pplActing}>
+              Link
+            </Button>
+          </span>
+          <br/>
+        
+       
+         
+      </React.Fragment>
+      )
+    }
   }
 }
 
-/* function App() {
-  return (
-    <React.Fragment></React.Fragment>
-  )
-  
-}; */
+
 
 export default App;
